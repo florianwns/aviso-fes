@@ -69,4 +69,8 @@ class Handler {
   pybind11::tuple calculate(pybind11::array_t<double>& lon,
                             pybind11::array_t<double>& lat,
                             pybind11::array& date);
+
+  pybind11::tuple calculate_at_point(const double lon,
+                             const double lat,
+                             pybind11::array& date);
 };

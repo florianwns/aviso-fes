@@ -27,7 +27,13 @@ PYBIND11_MODULE(pyfes, m) {
            [](Handler& self, py::array_t<double>& lon,
               py::array_t<double>& lat, py::array& date) -> py::tuple {
              return self.calculate(lon, lat, date);
+           })
+      .def("calculate_at_point",
+           [](Handler& self, const double lon,
+              const double lat, py::array& date) -> py::tuple {
+             return self.calculate_at_point(lon, lat, date);
            });
+
 
   m.attr("__version__") = "2.9.3";
 }

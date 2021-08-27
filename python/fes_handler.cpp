@@ -213,3 +213,47 @@ pybind11::tuple Handler::calculate(pybind11::array_t<double>& lon,
   }
   return pybind11::make_tuple(h, h_long_period, samples);
 }
+
+
+pybind11::tuple Handler::calculate_at_point(const double lon,
+                                   const double lat,
+                                   pybind11::array& date) {
+  std::unique_lock<std::mutex> lock(mutex_);
+
+  // arrays must one-dimensionnal
+  if (date.ndim() != 1) {
+    throw std::invalid_argument("date must be a one-dimensional array");
+  }
+
+  auto size = date.size();
+
+  // Cast python date to C++ objects
+  auto _date = cast_datetime(date);
+  if (_date.size() == 0) {
+    throw std::invalid_argument(
+        "Incompatible arguments:\n"
+        " 1. calculate(self, numpy.ndarray[m, 1], numpy.ndarray[m, 1], "
+        "numpy.ndarray[datetime.datetime[m, 1]])\n"
+        " 2. calculate(self, numpy.ndarray[m, 1], numpy.ndarray[m, 1], "
+        "numpy.ndarray[datetime64[us][m, 1]])");
+  }
+
+  // Allocates results
+  pybind11::array_t<double> h(pybind11::array::ShapeContainer{size});
+  pybind11::array_t<double> h_long_period(
+      pybind11::array::ShapeContainer{size});
+  pybind11::array_t<double> samples(pybind11::array::ShapeContainer{size});
+
+  auto _h = h.mutable_unchecked<1>();
+  auto _h_long_period = h_long_period.mutable_unchecked<1>();
+  auto _samples = samples.mutable_unchecked<1>();
+  {
+    pybind11::gil_scoped_release gil;
+
+    for (pybind11::ssize_t ix = 0; ix < size; ++ix) {
+      std::tie(_h(ix), _h_long_period(ix), _samples(ix)) =
+          calculate(lon, lat, _date[ix]);
+    }
+  }
+  return pybind11::make_tuple(h, h_long_period, samples);
+}
