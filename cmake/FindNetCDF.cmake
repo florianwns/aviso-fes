@@ -46,7 +46,9 @@ else()
       OUTPUT_VARIABLE NETCDF_INCLUDE_DIR)
   endif()
   unset(_nc_config)
+  message(WARNING ">>>>>>> ${NETCDF_INCLUDE_DIR}"
 endif ()
+
 
 set(USE_DEFAULT_PATHS "NO_DEFAULT_PATH")
 if(NETCDF_USE_DEFAULT_PATHS)
