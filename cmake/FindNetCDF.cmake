@@ -42,7 +42,7 @@ else()
   find_program(_nc_config "nc-config")
   if(_nc_config)
     execute_process(
-      COMMAND ${_nc_config} "--include"
+      COMMAND ${_nc_config} "--includedir"
       OUTPUT_VARIABLE NETCDF_INCLUDE_DIR)
   endif()
   unset(_nc_config)
