@@ -78,16 +78,20 @@ endif()
 message("-- Build type: ${CMAKE_BUILD_TYPE}")
 
 if (BUILD_PYTHON)
-  # The library must be built using C++14 compiler.
-  set(CMAKE_CXX_STANDARD 14)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   set(CMAKE_CXX_EXTENSIONS OFF)
   set(CMAKE_MACOSX_RPATH 1)
 
+  # The library must be built using C++11 or C++14 compiler.
   include(CheckCXXCompilerFlag)
+  check_cxx_compiler_flag("-std=c++11" HAS_CPP11_FLAG)
   check_cxx_compiler_flag("-std=c++14" HAS_CPP14_FLAG)
-  if(NOT HAS_CPP14_FLAG)
-    message(FATAL_ERROR "Unsupported compiler -- requires C++14 support!")
+  if(HAS_CPP14_FLAG)
+    set(CMAKE_CXX_STANDARD 14)
+  elseif(HAS_CPP11_FLAG)
+    set(CMAKE_CXX_STANDARD 11)
+  else()
+    message(FATAL_ERROR "Unsupported compiler -- requires C++11 or C++14 support!")
   endif()
 
   macro(CHECK_CXX_COMPILER_AND_LINKER_FLAGS _RESULT _CXX_FLAGS _LINKER_FLAGS)
