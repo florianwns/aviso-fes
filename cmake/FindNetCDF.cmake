@@ -34,9 +34,18 @@
 #  target_link_libraries (only_uses_f90 ${NETCDF_F90_LIBRARIES})
 
 #search starting from user editable cache var
+
 if (NETCDF_INCLUDE_DIR AND NETCDF_LIBRARY)
   # Already in cache, be silent
   set (NETCDF_FIND_QUIETLY TRUE)
+else()
+  find_program(_nc_config "nc-config")
+  if( _nc_config)
+    execute_process(
+      COMMAND ${_nc_config} "--includedir"
+      OUTPUT_VARIABLE NETCDF_INCLUDE_DIR)
+  endif()
+  unset(_nc_config)
 endif ()
 
 set(USE_DEFAULT_PATHS "NO_DEFAULT_PATH")
@@ -53,6 +62,10 @@ find_library (NETCDF_LIBRARY NAMES netcdf
   PATHS "${NETCDF_DIR}/lib"
   HINTS "${NETCDF_INCLUDE_DIR}/../lib")
 mark_as_advanced (NETCDF_LIBRARY)
+
+
+
+
 
 set (NETCDF_C_LIBRARIES ${NETCDF_LIBRARY})
 
