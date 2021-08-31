@@ -46,7 +46,7 @@ else()
       OUTPUT_VARIABLE NETCDF_INCLUDE_DIR)
   endif()
   unset(_nc_config)
-  message(WARNING ">>>>>>> ${NETCDF_INCLUDE_DIR}"
+  message(WARNING ">>>>>>> ${NETCDF_INCLUDE_DIR}")
 endif ()
 
 
