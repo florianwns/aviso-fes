@@ -42,12 +42,11 @@ else()
   find_program(_nc_config "nc-config")
   if(_nc_config)
     execute_process(
-      COMMAND ${_nc_config} "--includedir"
-      OUTPUT_VARIABLE _include_dir)
+      COMMAND ${_nc_config} "--version"
+      OUTPUT_VARIABLE NETCDF_VERSION)
   endif()
-  set (NETCDF_INCLUDE_DIR "${_include_dir}")
   unset(_nc_config)
-  message(WARNING ">>>>>>> ${NETCDF_INCLUDE_DIR}")
+  message(WARNING ">>>> ${NETCDF_VERSION} <<<<")
 endif ()
 
 
